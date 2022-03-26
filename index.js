@@ -1,3 +1,6 @@
+const shell = require('shelljs')
+const assert = require('assert')
+
 const {
   MULTI_SERVER = '[]',
   TARGET_DIR = '',
@@ -6,6 +9,17 @@ const {
   PACKAGE_NAME,
   PACKAGE_VERSION
 } = process.env
+
+const execAsync = (cmd, opts = {}) => {
+  return new Promise((resolve, reject) => {
+    shell.exec(cmd, opts, (code, stdout, stderr) => {
+      if (code !== 0) {
+        return reject(new Error(stderr))
+      }
+      return resolve(stdout)
+    })
+  })
+}
 
 const upgradePackage = async (projectPath) => {
   shell.cd(projectPath)
@@ -16,18 +30,15 @@ const upgradePackage = async (projectPath) => {
     shell.exec(`git checkout -b ${TARGET_BRANCH}`)
   }
   if (INSTALL_TOOL === 'yarn') {
-    shell.exec(`yarn install ${PACKAGE_NAME}${PACKAGE_VERSION ? '' : '@' + PACKAGE_VERSION}`)
+    await execAsync(`yarn upgrade ${PACKAGE_NAME}${PACKAGE_VERSION ? '@' + PACKAGE_VERSION : ''} -W`)
     shell.exec('git add package.json yarn.lock')
-    if (PACKAGE_VERSION) {
-      shell.exec(`git commit -m "chore: upgrade ${PACKAGE_NAME} ${PACKAGE_VERSION}"`)
-    } else {
-      shell.exec(`git commit -m "chore: upgrade ${PACKAGE_NAME}"`)
-    }
+    shell.exec(`git commit -m "chore: upgrade ${PACKAGE_NAME}"`)
     shell.exec(`git push origin ${TARGET_BRANCH}`)
   }
 }
 
 module.exports = async () => {
+  assert(PACKAGE_NAME, 'Package name is required')
   await JSON.parse(MULTI_SERVER || '[]').reduce(async (promise, serverName) => {
     await promise
     try {
