@@ -20,13 +20,14 @@ const upgradePackage = async (projectPath) => {
   }
   if (INSTALL_TOOL === 'yarn') {
     shell.exec(`yarn upgrade ${PACKAGE_NAME}${PACKAGE_VERSION ? '@' + PACKAGE_VERSION : ''} -W`)
+    shell.exec(`yarn`)
     shell.exec('git add package.json yarn.lock')
     shell.exec(`git commit -m "chore: upgrade ${PACKAGE_NAME}"`)
     shell.exec(`git push origin ${TARGET_BRANCH}`)
   }
 }
 
-module.exports = async () => {
+const multiUpgradePackage = async () => {
   assert(PACKAGE_NAME, 'Package name is required')
   await JSON.parse(MULTI_SERVER || '[]').reduce(async (promise, serverName) => {
     await promise
@@ -36,4 +37,9 @@ module.exports = async () => {
       console.error('处理异常', err)
     }
   }, Promise.resolve())
+}
+
+module.exports = {
+  upgradePackage,
+  multiUpgradePackage
 }
