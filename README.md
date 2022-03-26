@@ -1,1 +1,12 @@
-# upgrade-micro-package
+# upgrade-multi-server-package
+
+## 目的
+
+由于多项目同时需要更新某个包的时候，需要一个项目一个项目的更新，而此项目就是为了解决nodejs项目，同时更新多个项目的同一个包而生。
+
+## 需要实现的功能
+
+1. 配置多项目
+2. 使用更新方式（yarn/pnpm/npm）
+3. 包名以及版本号
+4. 配置分支（如果当前分支不在develop分支，需要先切回到develop分支，然后再切至配置分支）

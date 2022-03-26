@@ -1,0 +1,22 @@
+{
+  "name": "upgrade-multi-server-package",
+  "version": "0.0.1",
+  "description": "upgrade multi server package.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlfieriChou/upgrade-multi-server-package.git"
+  },
+  "author": "AlfieriChou",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlfieriChou/upgrade-multi-server-package/issues"
+  },
+  "homepage": "https://github.com/AlfieriChou/upgrade-multi-server-package#readme",
+  "dependencies": {
+    "shelljs": "^0.8.5"
+  }
+}
