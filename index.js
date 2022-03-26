@@ -10,17 +10,6 @@ const {
   PACKAGE_VERSION
 } = process.env
 
-const execAsync = (cmd, opts = {}) => {
-  return new Promise((resolve, reject) => {
-    shell.exec(cmd, opts, (code, stdout, stderr) => {
-      if (code !== 0) {
-        return reject(new Error(stderr))
-      }
-      return resolve(stdout)
-    })
-  })
-}
-
 const upgradePackage = async (projectPath) => {
   shell.cd(projectPath)
   const currentBranchInfo = shell.exec('git symbolic-ref --short -q HEAD')
@@ -30,7 +19,7 @@ const upgradePackage = async (projectPath) => {
     shell.exec(`git checkout -b ${TARGET_BRANCH}`)
   }
   if (INSTALL_TOOL === 'yarn') {
-    await execAsync(`yarn upgrade ${PACKAGE_NAME}${PACKAGE_VERSION ? '@' + PACKAGE_VERSION : ''} -W`)
+    shell.exec(`yarn upgrade ${PACKAGE_NAME}${PACKAGE_VERSION ? '@' + PACKAGE_VERSION : ''} -W`)
     shell.exec('git add package.json yarn.lock')
     shell.exec(`git commit -m "chore: upgrade ${PACKAGE_NAME}"`)
     shell.exec(`git push origin ${TARGET_BRANCH}`)
